@@ -1,8 +1,13 @@
 from flask import Blueprint, request, jsonify, abort
 from app.models.message import Message
 from .. import db
+from app.models.message import Message
+from app.schemas.schema import MessageSchema
+
 
 messages_bp = Blueprint('messages', __name__)
+message_schema = MessageSchema()
+messages_schema = MessageSchema(many=True)
 
 # Rota para listar todas as mensagens
 @messages_bp.route('/', methods=['GET'])
