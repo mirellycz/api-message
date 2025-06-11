@@ -10,6 +10,7 @@ message_schema = MessageSchema()
 messages_schema = MessageSchema(many=True)
 
 # Rota para listar todas as mensagens
+
 @messages_bp.route('/', methods=['GET'])
 def get_messages():
     messages = Message.query.all()
@@ -22,18 +23,19 @@ def get_message(message_id):
     return jsonify(message.to_dict()), 200
 
 # Rota para criar uma nova mensagem
-@messages_bp.route('/', methods=['POST'])
+@messages_bp.route("/", methods=["POST"])
 def create_message():
     data = request.get_json()
-    if not data or 'content' not in data:
-        abort(400, description="Campo 'content' é obrigatório.")
-    
-    new_message = Message(content=data['content'])
-    db.session.add(new_message)
-    db.session.commit()
-    
-    return jsonify(new_message.to_dict()), 201
+    content = data.get("content")
 
+    if not content:
+        return jsonify({"error": "Campo 'content' é obrigatório"}), 400
+
+    nova_msg = Message(content=content)  
+    db.session.add(nova_msg)
+    db.session.commit()
+
+    return jsonify(nova_msg.to_dict()), 201
 # Rota para atualizar uma mensagem existente
 @messages_bp.route('/<int:message_id>', methods=['PUT'])
 def update_message(message_id):
@@ -48,10 +50,11 @@ def update_message(message_id):
     return jsonify(message.to_dict()), 200
 
 # Rota para deletar uma mensagem
-@messages_bp.route('/<int:message_id>', methods=['DELETE'])
-def delete_message(message_id):
-    message = Message.query.get_or_404(message_id)
-    db.session.delete(message)
+@messages_bp.route("/<int:id>", methods=["DELETE"])
+def delete_message(id):
+    mensagem = Message.query.get_or_404(id)
+    db.session.delete(mensagem)
     db.session.commit()
+    return jsonify({"message": "Mensagem deletada com sucesso"}), 200
     
-    return '', 204
+    

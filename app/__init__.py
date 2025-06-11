@@ -26,8 +26,12 @@ def create_app():
 
     app.register_blueprint(messages_bp, url_prefix="/messages")
 
+
     # Tratadores globais de erro (explicados na seção 5.6)
     register_error_handlers(app)
+
+    with app.app_context():
+        db.create_all()
 
     @app.route("/test")
     def test():
