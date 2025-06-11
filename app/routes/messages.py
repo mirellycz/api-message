@@ -6,11 +6,10 @@ from app.schemas.schema import MessageSchema
 
 
 messages_bp = Blueprint('messages', __name__)
-message_schema = MessageSchema()
-messages_schema = MessageSchema(many=True)
+message_schema = MessageSchema() #instancia p uma unica msg
+messages_schema = MessageSchema(many=True) #varias msg
 
 # Rota para listar todas as mensagens
-
 @messages_bp.route('/', methods=['GET'])
 def get_messages():
     messages = Message.query.all()
